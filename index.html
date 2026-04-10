@@ -1,47 +1,36 @@
 <!doctype html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>راصد النجوم — شاهد نجمك</title>
+  <title>سجل النجوم — شهادة</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body dir="rtl">
-  <header class="topbar">
-    <h1>راصد النجوم</h1>
-    <p class="subtitle">اكتشف موقع نجومك بسرعة — تجربة محسّنة للأجهزة المحمولة</p>
-  </header>
-
-  <main class="container">
-    <section class="search-bar">
-      <input id="search" placeholder="ابحث باسم النجم أو الصفات..." />
-    </section>
-
-    <section id="stars-list" class="cards"></section>
-  </main>
-
-  <template id="card-template">
-    <article class="card">
-      <div class="thumb"></div>
-      <div class="meta">
-        <h2 class="star-name"></h2>
-        <p class="star-sub">القدر الظاهري: <span class="mag"></span> • فاصلة: <span class="dist"></span></p>
-        <p class="star-desc"></p>
-        <div class="actions">
-          <button class="btn view-btn">مشاهدة نجمته</button>
-          <button class="btn details-btn">تفاصيل</button>
+<body>
+  <main class="page">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">★</div>
+        <div class="titles">
+          <h1>سجل النجوم</h1>
+          <p class="slogan">شهادة تسجيل نجمة رسمية — تجريبية</p>
         </div>
       </div>
-    </article>
-  </template>
+    </header>
 
-  <footer class="footer">
-    <small>مصدر البيانات: ملف محلي تجريبي — استبدل بـ API حقيقي أو SIMBAD عند الحاجة.</small>
-  </footer>
+    <section id="certificate-area" class="certificate-area">
+      <!-- بطاقات الشهادات تُملأ ديناميكياً بواسطة app.js -->
+    </section>
 
-  <script src="app.js" type="module"></script>
+    <footer class="foot">
+      <small>نسخة تجريبية • تم تصميم الواجهة للهواتف</small>
+    </footer>
+  </main>
+
+  <script type="module" src="app.js"></script>
 </body>
 </html>
+
 
 
 
