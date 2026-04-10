@@ -1,105 +1,115 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سجل النجوم العالمي - STR-2026-0021</title>
+    <title>شهادة ملكية نجمة - ياني</title>
     <style>
-        /* إعدادات الخلفية المتحركة */
+        /* إعدادات الخلفية الفضائية */
         body {
             margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
-            background-attachment: fixed;
-            color: white;
-            overflow-x: hidden;
+            height: 100vh;
+            background: #02050a;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            color: white;
+            perspective: 1000px;
         }
 
-        /* إضافة تأثير المجرات والنجوم */
-        body::before {
-            content: "";
+        /* صناعة النجوم برمجياً لضمان ظهورها */
+        .stars-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://transparenttextures.com');
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            z-index: -2;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle var(--duration) infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* إضافة كوكب متحرك في الزاوية */
+        .planet {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 30% 30%, #5d44a8, #24164d);
+            border-radius: 50%;
+            top: 10%;
+            right: 10%;
+            box-shadow: -20px -20px 50px rgba(0,0,0,0.5) inset, 0 0 30px rgba(93, 68, 168, 0.3);
             z-index: -1;
-            animation: moveStars 100s linear infinite;
+            animation: float 6s ease-in-out infinite;
         }
 
-        @keyframes moveStars {
-            from { background-position: 0 0; }
-            to { background-position: 10000px 5000px; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
 
-        /* كرت الشهادة */
-        .certificate-card {
-            background: rgba(10, 15, 30, 0.85);
-            border: 3px solid #d4af37;
+        /* بطاقة الشهادة */
+        .card {
+            background: rgba(10, 15, 30, 0.9);
+            border: 2px solid #d4af37;
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
-            max-width: 600px;
-            width: 90%;
+            border-radius: 20px;
             text-align: center;
-            position: relative;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(15px);
+            max-width: 450px;
+            z-index: 10;
         }
 
-        h1 { color: #d4af37; margin-bottom: 10px; font-size: 28px; }
-        p { font-size: 18px; line-height: 1.6; }
-        .star-id { color: #f1c40f; font-weight: bold; font-size: 22px; }
+        h1 { color: #d4af37; font-size: 24px; margin-bottom: 20px; }
+        .info { font-size: 18px; margin: 10px 0; }
+        .highlight { color: #f1c40f; font-weight: bold; font-size: 22px; }
 
-        /* الأزرار */
         .btn {
+            margin-top: 25px;
+            padding: 12px 25px;
             background: linear-gradient(45deg, #d4af37, #f1c40f);
-            color: #000;
-            padding: 15px 30px;
             border: none;
-            border-radius: 25px;
-            font-size: 18px;
+            border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
         }
 
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(241, 196, 15, 0.6);
-        }
+        .btn:hover { transform: scale(1.1); box-shadow: 0 0 20px #f1c40f; }
 
-        /* تصميم الـ Popup */
-        .overlay {
+        /* الـ Popup */
+        .popup {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 1000;
         }
 
-        .popup-content {
+        .popup-box {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 90%; height: 80%;
-            background: #000;
+            width: 90%; height: 85%;
             border: 2px solid #d4af37;
-            border-radius: 10px;
-            overflow: hidden;
         }
 
-        .close-btn {
+        .close {
             position: absolute;
-            top: 10px; right: 15px;
-            color: white; font-size: 30px;
-            cursor: pointer; z-index: 1001;
+            top: -40px; right: 0;
+            color: white; font-size: 30px; cursor: pointer;
         }
 
         iframe { width: 100%; height: 100%; border: none; }
@@ -107,41 +117,52 @@
 </head>
 <body>
 
-    <div class="certificate-card">
-        <img src="https://flaticon.com" width="80" alt="Star Icon">
-        <h1>شهادة تسجيل نجمة رسمية</h1>
-        <p>تم تسجيل هذه النجمة في الفهرس العالمي للنجوم</p>
-        <p>رقم تعريف النجمة: <span class="star-id">STR-2026-0021</span></p>
-        <p>المالك: <strong>اسم الشخص هنا</strong></p>
-        
-        <button class="btn" onclick="openStellarium()">رؤية النجمة في السماء ✨</button>
+    <div class="stars-container" id="starField"></div>
+    <div class="planet"></div>
+
+    <div class="card">
+        <img src="https://icons8.com" alt="star">
+        <h1>شهادة تسجيل ملكية</h1>
+        <p class="info">بموجب هذه الوثيقة، تم تسجيل النجمة:</p>
+        <p class="highlight">HD 209458</p>
+        <p class="info">رسمياً باسم:</p>
+        <p class="highlight" style="font-size: 28px;">ياني</p>
+        <button class="btn" onclick="openMap()">رأيت نجمتي ✨</button>
     </div>
 
-    <!-- نافذة Stellarium المنبثقة -->
-    <div id="stellariumOverlay" class="overlay">
-        <span class="close-btn" onclick="closeStellarium()">&times;</span>
-        <div class="popup-content">
-            <!-- موقع Stellarium Web -->
-            <iframe src="https://stellarium-web.org"></iframe>
+    <!-- نافذة Stellarium -->
+    <div id="mapPopup" class="popup">
+        <div class="popup-box">
+            <span class="close" onclick="closeMap()">&times; إغلاق</span>
+            <!-- تم ضبط الرابط ليبحث عن النجمة HD 209458 مباشرة -->
+            <iframe id="stellaFrame" src=""></iframe>
         </div>
     </div>
 
     <script>
-        function openStellarium() {
-            document.getElementById("stellariumOverlay").style.display = "block";
+        // توليد النجوم في الخلفية
+        const field = document.getElementById('starField');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = star.style.height = Math.random() * 3 + 'px';
+            star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+            field.appendChild(star);
         }
 
-        function closeStellarium() {
-            document.getElementById("stellariumOverlay").style.display = "none";
+        function openMap() {
+            // توجيه الخريطة للنجمة المطلوبة
+            document.getElementById('stellaFrame').src = "https://stellarium-web.org";
+            document.getElementById('mapPopup').style.display = 'block';
         }
 
-        // إغلاق النافذة عند الضغط خارجها
-        window.onclick = function(event) {
-            let overlay = document.getElementById("stellariumOverlay");
-            if (event.target == overlay) {
-                overlay.style.display = "none";
-            }
+        function closeMap() {
+            document.getElementById('mapPopup').style.display = 'none';
+            document.getElementById('stellaFrame').src = ""; // إيقاف التحميل لتوفير الموارد
         }
     </script>
 </body>
 </html>
+
