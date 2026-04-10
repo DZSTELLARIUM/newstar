@@ -1,110 +1,48 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!doctype html>
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dzstellarium - سجل النجوم</title>
-    <style>
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; min-height: 100vh; font-family: 'Segoe UI', sans-serif; background: #000; color: #fff; overflow-x: hidden; }
-
-        /* خلفية مجرات حقيقية ومتحركة خفيفة للهاتف */
-        .space-background {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://nasa.gov') center/cover no-repeat;
-            z-index: -2; opacity: 0.7;
-        }
-
-        .overlay-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
-            z-index: -1;
-        }
-
-        .content-container {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 100vh; padding: 20px;
-        }
-
-        /* كرت الشهادة الاحترافي */
-        .cert-card {
-            width: 100%; max-width: 400px;
-            background: rgba(10, 12, 18, 0.85);
-            border: 1px solid #c5a059;
-            border-radius: 20px; padding: 40px 25px;
-            text-align: center; backdrop-filter: blur(15px);
-            box-shadow: 0 0 40px rgba(197, 160, 89, 0.2);
-            position: relative;
-        }
-
-        .gold-line { width: 60px; height: 2px; background: #c5a059; margin: 15px auto; }
-        
-        .registry-tag { color: #c5a059; font-size: 11px; letter-spacing: 3px; font-weight: bold; }
-        
-        h1 { font-size: 26px; margin: 15px 0; color: #fff; }
-
-        .owner-name {
-            font-size: 50px; color: #c5a059; font-weight: 900;
-            margin: 20px 0; text-shadow: 0 0 20px rgba(197, 160, 89, 0.5);
-        }
-
-        .star-specs {
-            background: rgba(255,255,255,0.03); border-radius: 12px;
-            padding: 20px; margin: 25px 0; text-align: right;
-            border: 1px solid rgba(197, 160, 89, 0.1);
-        }
-
-        .spec-item { margin-bottom: 10px; font-size: 14px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        .spec-label { color: #c5a059; }
-
-        /* الزر الاحترافي */
-        .btn-stellar {
-            display: block; width: 100%; padding: 18px;
-            background: linear-gradient(135deg, #c5a059 0%, #8e6d2d 100%);
-            color: #000; text-decoration: none; border-radius: 12px;
-            font-weight: bold; font-size: 16px; transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-
-        .btn-stellar:active { transform: scale(0.98); }
-
-        .disclaimer { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 30px; line-height: 1.5; }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>راصد النجوم — شاهد نجمك</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body dir="rtl">
+  <header class="topbar">
+    <h1>راصد النجوم</h1>
+    <p class="subtitle">اكتشف موقع نجومك بسرعة — تجربة محسّنة للأجهزة المحمولة</p>
+  </header>
 
-    <div class="space-background"></div>
-    <div class="overlay-layer"></div>
+  <main class="container">
+    <section class="search-bar">
+      <input id="search" placeholder="ابحث باسم النجم أو الصفات..." />
+    </section>
 
-    <div class="content-container">
-        <div class="cert-card">
-            <div class="registry-tag">DZSTELLARIUM OFFICIAL</div>
-            <div class="gold-line"></div>
-            
-            <h1>شهادة اعتماد نجمة</h1>
-            <p style="font-size: 14px; opacity: 0.8;">تم تسجيل البيانات في الفهرس تحت اسم:</p>
-            
-            <div class="owner-name">ياني</div>
+    <section id="stars-list" class="cards"></section>
+  </main>
 
-            <div class="star-specs">
-                <div class="spec-item"><span class="spec-value">HD 209458 (Osiris)</span> <span class="spec-label">معرف النجم:</span></div>
-                <div class="spec-item"><span class="spec-value">Pegasus</span> <span class="spec-label">الكوكبة:</span></div>
-                <div class="spec-item"><span class="spec-value">150 Ly</span> <span class="spec-label">المسافة:</span></div>
-                <div class="spec-item"><span class="spec-value">22h 03m 10s</span> <span class="spec-label">الإحداثيات:</span></div>
-            </div>
-
-            <a href="https://stellarium-web.org" target="_blank" class="btn-stellar">
-                فتح التلسكوب التفاعلي 🛰️
-            </a>
-
-            <div class="disclaimer">
-                هذه الشهادة عبارة عن شهادة رمزية وليست رسمية، تم إصدارها عبر سجلات dzstellarium للأغراض التوثيقية الشخصية فقط.
-            </div>
+  <template id="card-template">
+    <article class="card">
+      <div class="thumb"></div>
+      <div class="meta">
+        <h2 class="star-name"></h2>
+        <p class="star-sub">القدر الظاهري: <span class="mag"></span> • فاصلة: <span class="dist"></span></p>
+        <p class="star-desc"></p>
+        <div class="actions">
+          <button class="btn view-btn">مشاهدة نجمته</button>
+          <button class="btn details-btn">تفاصيل</button>
         </div>
-    </div>
+      </div>
+    </article>
+  </template>
 
+  <footer class="footer">
+    <small>مصدر البيانات: ملف محلي تجريبي — استبدل بـ API حقيقي أو SIMBAD عند الحاجة.</small>
+  </footer>
+
+  <script src="app.js" type="module"></script>
 </body>
 </html>
+
 
 
 
