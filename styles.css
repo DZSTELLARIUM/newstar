@@ -1,0 +1,86 @@
+:root{
+  --bg1:#020214;
+  --bg2:#06102a;
+  --accent:#7fd3ff;
+  --card:#0b1120;
+  --glass: rgba(255,255,255,0.04);
+  --text:#E6F0FF;
+  --muted:#9fb0c8;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:Inter, "Segoe UI", Roboto, system-ui, "Helvetica Neue", Arial;
+  background: radial-gradient(ellipse at 20% 10%, rgba(127,211,255,0.04) 0%, transparent 15%),
+              linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 100%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+  overflow-y:auto;
+  background-attachment:fixed;
+}
+
+/* animated starfield using CSS gradients + pseudo-elements */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(1px 1px at 20% 10%, rgba(255,255,255,0.85), transparent 40%),
+    radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.7), transparent 40%),
+    radial-gradient(1px 1px at 80% 40%, rgba(255,255,255,0.6), transparent 40%);
+  opacity:0.8;
+  animation: twinkle 12s linear infinite;
+  pointer-events:none;
+  z-index:0;
+}
+@keyframes twinkle{
+  0%{opacity:0.6}
+  50%{opacity:1}
+  100%{opacity:0.6}
+}
+
+.topbar{
+  padding:20px 16px;
+  position:sticky;
+  top:0;
+  backdrop-filter: blur(8px);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  z-index:5;
+}
+.topbar h1{margin:0;font-size:1.3rem}
+.subtitle{margin:6px 0 0;color:var(--muted);font-size:0.9rem}
+
+.container{padding:12px;max-width:980px;margin:0 auto;position:relative;z-index:2}
+
+.search-bar{margin:12px 0 18px}
+#search{
+  width:100%;padding:12px 14px;border-radius:12px;border:0;background:var(--glass);
+  color:var(--text);outline:none;font-size:1rem;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02);
+}
+
+.cards{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:760px){ .cards{grid-template-columns:repeat(2,1fr)} }
+
+.card{
+  display:flex;gap:12px;padding:12px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  box-shadow: 0 6px 18px rgba(2,6,23,0.6);align-items:center;overflow:hidden;border:1px solid rgba(255,255,255,0.03);
+}
+.thumb{width:82px;height:82px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#7f8cff);flex-shrink:0;box-shadow: inset 0 -6px 20px rgba(0,0,0,0.35)}
+.meta{flex:1}
+.star-name{margin:0;font-size:1.05rem}
+.star-sub{margin:6px 0 0;color:var(--muted);font-size:0.86rem}
+.star-desc{margin:8px 0 0;color:var(--muted);font-size:0.92rem}
+
+.actions{margin-top:10px;display:flex;gap:8px}
+.btn{
+  padding:8px 10px;border-radius:10px;border:0;background:rgba(127,211,255,0.12);color:var(--accent);cursor:pointer;font-weight:600;
+  transition:transform .12s ease, box-shadow .12s;
+}
+.btn:active{transform:scale(.98)}
+.view-btn{background:linear-gradient(90deg, rgba(127,211,255,0.12), rgba(127,211,255,0.06));box-shadow: 0 6px 12px rgba(127,211,255,0.04)}
+.details-btn{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.03)}
+
+.footer{padding:18px 12px;color:var(--muted);text-align:center;font-size:0.85rem}
