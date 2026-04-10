@@ -3,205 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سجل النجوم الفلكي - dzstellarium</title>
+    <title>dzstellarium - سجل ياني</title>
     <style>
-        :root {
-            --gold: #c5a059;
-            --dark-gold: #8e6d2d;
-            --space-bg: #020408;
-        }
-
         body, html {
-            margin: 0; padding: 0; min-height: 100vh;
-            background-color: var(--space-bg);
-            color: #e0e0e0; font-family: 'Segoe UI', Roboto, sans-serif;
-            overflow-x: hidden; display: flex; flex-direction: column; align-items: center;
+            margin: 0; padding: 0; height: 100%;
+            background-color: #000;
+            font-family: 'Tahoma', sans-serif;
+            color: #fff; overflow-x: hidden;
         }
 
-        /* خلفية الفضاء العميقة */
-        .space-bg {
+        /* خلفية فضائية مخصصة للهاتف */
+        .galaxy-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #0a1128 0%, #000 100%);
-            z-index: -2;
+            background: url('https://unsplash.com') center/cover no-repeat;
+            filter: brightness(0.6); z-index: -1;
         }
 
-        #stars-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
-
-        /* حاوية الشهادة الاحترافية */
-        .main-wrapper {
-            margin: 50px 20px; position: relative;
-            background: rgba(5, 10, 20, 0.8);
-            border: 1px solid var(--dark-gold);
-            padding: 60px 40px; border-radius: 4px;
-            max-width: 800px; width: 100%;
-            box-shadow: 0 0 100px rgba(0,0,0,0.8), inset 0 0 50px rgba(197, 160, 89, 0.05);
-            text-align: center; backdrop-filter: blur(10px);
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 20%, #000 100%);
+            z-index: -1;
         }
 
-        /* زخارف الزوايا */
-        .corner {
-            position: absolute; width: 40px; height: 40px; border: 2px solid var(--gold);
-        }
-        .top-right { top: 15px; right: 15px; border-bottom: none; border-left: none; }
-        .bottom-left { bottom: 15px; left: 15px; border-top: none; border-right: none; }
-
-        .brand-header {
-            font-size: 14px; letter-spacing: 4px; color: var(--gold);
-            text-transform: uppercase; margin-bottom: 30px; opacity: 0.8;
+        .container {
+            display: flex; flex-direction: column; align-items: center;
+            padding: 30px 15px; text-align: center;
         }
 
-        h1 {
-            font-family: 'Times New Roman', serif; font-size: 2.5rem;
-            margin: 10px 0; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.2);
+        /* كرت الشهادة */
+        .star-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #c5a059;
+            padding: 30px 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            width: 100%; max-width: 350px;
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.3);
         }
 
-        .registered-name {
-            font-size: 4rem; color: var(--gold); margin: 30px 0;
-            font-weight: bold; text-shadow: 0 0 30px rgba(197, 160, 89, 0.4);
+        .brand { font-size: 12px; color: #c5a059; letter-spacing: 3px; margin-bottom: 20px; }
+        
+        h1 { font-size: 24px; margin-bottom: 10px; color: #fff; }
+
+        .name-highlight {
+            font-size: 45px; color: #c5a059; font-weight: bold;
+            margin: 20px 0; text-shadow: 0 0 15px rgba(197, 160, 89, 0.6);
         }
 
-        .data-table {
-            display: grid; grid-template-columns: repeat(2, 1fr);
-            gap: 20px; margin: 40px 0; padding: 30px;
-            border: 1px solid rgba(197, 160, 89, 0.2); background: rgba(255,255,255,0.02);
+        .details {
+            text-align: right; background: rgba(255,255,255,0.05);
+            padding: 15px; border-radius: 10px; margin-bottom: 25px;
         }
 
-        .data-entry { text-align: right; border-right: 2px solid var(--gold); padding-right: 15px; }
-        .label { font-size: 12px; color: var(--gold); text-transform: uppercase; display: block; }
-        .value { font-size: 18px; color: #fff; }
+        .details div { margin-bottom: 8px; font-size: 14px; }
+        .details b { color: #c5a059; }
 
-        .btn-action {
-            background: var(--gold); color: #000; padding: 18px 45px;
-            border: none; cursor: pointer; font-weight: bold; font-size: 16px;
-            transition: 0.4s; letter-spacing: 1px;
-        }
-        .btn-action:hover { background: #fff; box-shadow: 0 0 30px var(--gold); transform: translateY(-2px); }
-
-        /* التذييل الصغير */
-        .disclaimer {
-            margin-top: 50px; font-size: 11px; color: rgba(255,255,255,0.4);
-            letter-spacing: 0.5px;
+        .btn-link {
+            background: linear-gradient(45deg, #c5a059, #8e6d2d);
+            color: #000; padding: 15px 30px; border-radius: 50px;
+            text-decoration: none; font-weight: bold; display: inline-block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: 0.3s; width: 80%;
         }
 
-        /* نافذة Stellarium الـ Popup */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999;
+        .footer-note {
+            margin-top: 40px; font-size: 10px; color: rgba(255,255,255,0.5);
+            max-width: 300px;
         }
-        .modal-header {
-            padding: 10px 20px; background: #111; display: flex; justify-content: space-between;
-            align-items: center; border-bottom: 1px solid var(--gold);
-        }
-        .close-btn { color: var(--gold); font-size: 28px; cursor: pointer; }
-        iframe { width: 100%; height: calc(100% - 50px); border: none; }
     </style>
 </head>
 <body>
 
-    <div class="space-bg"></div>
-    <canvas id="stars-canvas"></canvas>
+    <div class="galaxy-bg"></div>
+    <div class="overlay"></div>
 
-    <div class="main-wrapper">
-        <div class="corner top-right"></div>
-        <div class="corner bottom-left"></div>
+    <div class="container">
+        <div class="star-card">
+            <div class="brand">DZSTELLARIUM REGISTRY</div>
+            <img src="https://icons8.com" width="60">
+            <h1>شهادة ملكية نجم</h1>
+            <p>تم تسجيل هذا الجرم السماوي باسم:</p>
+            <div class="name-highlight">ياني</div>
 
-        <div class="brand-header">dzstellarium registry unit</div>
-        
-        <img src="https://icons8.com" style="width:60px; margin-bottom: 20px;">
-        
-        <h1>شهادة تسجيل نجمة</h1>
-        <p style="opacity: 0.7;">بموجب المعايير المعتمدة في سجلات <b>dzstellarium</b>، تم إدراج النجم:</p>
-        
-        <div class="registered-name">ياني</div>
+            <div class="details">
+                <div><b>اسم النجم:</b> HD 209458</div>
+                <div><b>الكوكبة:</b> Pegasus (الفرس الأعظم)</div>
+                <div><b>الإحداثيات:</b> 22h 03m 10s | +18° 53′</div>
+                <div><b>التاريخ:</b> 10-04-2026</div>
+            </div>
 
-        <div class="data-table">
-            <div class="data-entry">
-                <span class="label">رقم التسجيل الفلكي</span>
-                <span class="value">STR-2026-DZ-0021</span>
-            </div>
-            <div class="data-entry">
-                <span class="label">معرف النجم (HD)</span>
-                <span class="value">HD 209458 (Osiris)</span>
-            </div>
-            <div class="data-entry">
-                <span class="label">الإحداثيات السماوية</span>
-                <span class="value">22h 03m 10s, +18° 53′</span>
-            </div>
-            <div class="data-entry">
-                <span class="label">تاريخ الاعتماد</span>
-                <span class="value">10 أبريل 2026</span>
-            </div>
+            <!-- فتح الرابط في نافذة جديدة يضمن عمل البحث التلقائي والضغط على النجم -->
+            <a href="https://stellarium-web.org" target="_blank" class="btn-link">
+                تحديد موقع النجم الآن ✨
+            </a>
         </div>
 
-        <button class="btn-action" onclick="showStar()">بدء الرصد الفلكي للموقع</button>
-
-        <div class="disclaimer">
-            * هذه الشهادة عبارة عن شهادة رمزية و ليست رسمية صادرة عن جهة حكومية فلكية.
+        <div class="footer-note">
+            هذه الشهادة عبارة عن شهادة رمزية . تم إنشاء هذا السجل لغرض التوثيق الرمزي عبر dzstellarium.
         </div>
     </div>
 
-    <!-- نافذة الرصد -->
-    <div id="starModal" class="modal">
-        <div class="modal-header">
-            <span style="color: var(--gold); font-size: 14px;">نظام الرصد الافتراضي - dzstellarium</span>
-            <span class="close-btn" onclick="hideStar()">&times;</span>
-        </div>
-        <!-- الرصد المباشر لنجمة HD 209458 بإحداثياتها -->
-        <iframe id="skyFrame" src=""></iframe>
-    </div>
-
-    <script>
-        // تأثير النجوم في الخلفية
-        const canvas = document.getElementById('stars-canvas');
-        const ctx = canvas.getContext('2d');
-        let stars = [];
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        window.onresize = resize;
-        resize();
-
-        for(let i=0; i<200; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                r: Math.random() * 1.5,
-                o: Math.random(),
-                s: Math.random() * 0.02
-            });
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            stars.forEach(st => {
-                st.o += st.s;
-                if(st.o > 1 || st.o < 0) st.s = -st.s;
-                ctx.beginPath();
-                ctx.arc(st.x, st.y, st.r, 0, Math.PI*2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${st.o})`;
-                ctx.fill();
-            });
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // فتح وإغلاق النافذة
-        function showStar() {
-            // الرابط المباشر للبحث عن النجمة Osiris (HD 209458)
-            document.getElementById('skyFrame').src = "https://stellarium-web.org";
-            document.getElementById('starModal').style.display = 'block';
-        }
-
-        function hideStar() {
-            document.getElementById('starModal').style.display = 'none';
-            document.getElementById('skyFrame').src = '';
-        }
-    </script>
 </body>
 </html>
+
 
 
 
